@@ -3,7 +3,7 @@ name: Deploy Lambda
 on:
   push:
     branches:
-      - main
+      - staging
 
 jobs:
   deploy:
@@ -18,7 +18,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: serverless deploy --stage prod
+    - name: serverless deploy --stage staging
       uses: serverless/github-action@v1
       with:
         args: deploy
