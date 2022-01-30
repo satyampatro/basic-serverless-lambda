@@ -14,6 +14,15 @@ jobs:
       matrix:
         node-version: [14.x]
     steps:
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+    - name: Slack Notification on Job Start
+      uses: rtCamp/action-slack-notify@v2
+      env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_COLOR: '#07b5ff'
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -28,3 +37,20 @@ jobs:
         # or if using AWS credentials directly
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+   - name: Slack Notification on Success
+      if: ${{ success() }}
+      uses: rtCamp/action-slack-notify@v2
+      env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_COLOR: '#28c72a'
+          SLACK_MESSAGE: 'Deployed Successfully to -> https://staging.ecovia.life/'
+          SLACK_FOOTER: 'Check Test Coverage -> ${{ steps.fb.outputs.details_url }}'
+          MSG_MINIMAL: ref,actions url,commit
+    - name: Slack Notification on Failure
+      if: ${{ failure() }}
+      uses: rtCamp/action-slack-notify@v2
+      env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_COLOR: '#eb0011'
+          SLACK_MESSAGE: 'Deployment Failure'
+          MSG_MINIMAL: ref,actions url,commit
