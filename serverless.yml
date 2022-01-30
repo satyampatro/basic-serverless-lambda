@@ -1,5 +1,5 @@
-app: basic-serverless-lambda
-service: basic-serverless-lambda
+app: serverless-lambda
+service: serverless-lambda
 
 provider:
   name: aws
