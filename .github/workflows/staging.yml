@@ -22,15 +22,14 @@ jobs:
       uses: montudor/action-zip@v1
       with:
         args: zip -r serverless-lambda-staging-hello.zip ./ -x ''*.husky*''
+    - name: Deploy lambda function
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    - run: aws lambda update-function-code --function-name serverless-lambda-staging-hello --zip-file fileb://serverless-lambda-staging-hello.zip --region ap-south-1
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    - run: aws lambda update-function-configuration --function-name serverless-lambda-staging-hello --environment "Variables="
+      run: aws lambda update-function-code --function-name serverless-lambda-staging-hello --zip-file fileb://serverless-lambda-staging-hello.zip --region ap-south-1
+    - name: Update lambda function environment variables
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         LAMBDA_VAR: ${{ secrets.LAMBDA_VAR }}
+      run: aws lambda update-function-configuration --function-name serverless-lambda-staging-hello --environment "Variables="
