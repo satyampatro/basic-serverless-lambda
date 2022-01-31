@@ -21,32 +21,13 @@ jobs:
       uses: actions/setup-node@master
       with:
         node-version: ${{ matrix.node-version }}
-    - name: zip source code
-      uses: montudor/action-zip@v1
+    - name: Configure AWS credentials from Test account
+      uses: aws-actions/configure-aws-credentials@master
       with:
-        args: zip -r serverless-lambda-staging-hello.zip ./ -x ''*.husky*''
-    - name: default deploy
-      uses: appleboy/lambda-action@master
-      with:
-        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws_region: ap-south-1
-        function_name: serverless-lambda-staging-hello
-        zip_file: serverless-lambda-staging-hello.zip
-    # - name: Configure AWS credentials from Test account
-    #   uses: aws-actions/configure-aws-credentials@master
-    #   with:
-    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     aws-region: ap-south-1
-    # - name: Deploy lambda function
-    #   env:
-    #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #   run: aws lambda update-function-code --function-name serverless-lambda-staging-hello --zip-file fileb://serverless-lambda-staging-hello.zip --region ap-south-1
-    # - name: Update lambda function environment variables
-    #   env:
-    #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     LAMBDA_VAR: ${{ secrets.LAMBDA_VAR }}
-    #   run: aws lambda update-function-configuration --function-name serverless-lambda-staging-hello --environment "Variables=$LAMBDA_VAR"
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
+    - name: Deploy
+      run: |
+        zip -r serverless-lambda-staging-hello ./
+        aws lambda update-function-code --function-name serverless-lambda-staging-hello --zip-file fileb://serverless-lambda-staging-hello.zip --region ap-south-1
