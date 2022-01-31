@@ -12,6 +12,9 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x]
+    permissions:
+      id-token: write
+      contents: read
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
