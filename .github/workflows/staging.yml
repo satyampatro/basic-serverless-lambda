@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -21,19 +21,16 @@ jobs:
     - name: zip source code
       uses: montudor/action-zip@v1
       with:
-        args: zip -r ecovia-notification-lambda.zip ./ -x ''*.husky*''
+        args: zip -r serverless-lambda-staging-hello.zip ./ -x ''*.husky*''
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    - run: 'echo "$SECRETS" > key'
-      shell: bash
+    - run: aws lambda update-function-code --function-name serverless-lambda-staging-hello --zip-file fileb://serverless-lambda-staging-hello.zip --region ap-south-1
       env:
-        SECRETS: ${{secrets}}
-    # - run: aws lambda update-function-code --function-name ecovia-notification-lambda --zip-file fileb://ecovia-notification-lambda.zip --region ap-south-1
-    #   env:
-    #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    # - run: aws lambda update-function-configuration --function-name ecovia-notification-lambda --environment "Variables={TELEGRAM_TOKEN=2038549639:AAH5nD7yl_XHia4XdjupUZ-PkUQOOSEKVkc,GUPSHUP_API_KEY=z5elwyektzaw9sxlilsyq3yc7a4l2vgc,GUPSHUP_OPT_IN_API_URL=https://api.gupshup.io/sm/api/v1/app/opt/in/EcoviaBot,GUPSHUP_SOURCE_PHONE=919106199139, GUPSHUP_TEMPLATE_MESSAGE_END_POINT=http://api.gupshup.io/sm/api/v1/template/msg,GUPSHUP_ASKING_ADDRESS_MESSAGE_TEMPLATE_ID=d6a40b21-12e5-48ee-a0f9-413169887018,GUPSHUP_ONBOARDING_MESSAGE_TEMPLATE_ID=6d779bc9-37b8-4e9f-96c9-7b0065d9655d,GUPSHUP_REWARDS_MESSAGE_TEMPLATE_ID=cd5b631a-91ee-4518-8601-400d3e078ef8,GUPSHUP_OUT_FOR_PICKUP_TEMPLATE_ID=d9925816-ab56-4d24-aa88-d6b66b26a2f2,GUPSHUP_APOLOGY_FOR_DELAYED_PICKUP_TEMPLATE_ID=8da61400-c456-4cca-a518-1ab765854885,GUPSHUP_ASKING_ADDRESS_WITH_UI_TEMPLATE_ID=78f7bfdf-4a68-4db4-8769-9f91e9f1631e,GUPSHUP_ASKING_CONFIRMATION_TEMPLATE_ID=d99036e4-34a8-4a87-9994-9323d12a7474,SLACK_BOT_REQUEST_API_ENDPOINT=https://slack.com/api/chat.postMessage,SLACK_BOT_API_TOKEN=xoxb-2433862719076-2881600720630-BkXi2cWuQu1KNmAnhj5g45DP,ECOVIA_SWIFT_UPDATES=-636994926,ECOVIA_CUSTOMERS_CHAT=-519159549,ECOVIA_ACCESSOR_BOT=-639057452,ECOVIA_CUSTOMER_CARE_CHAT=-743488935,TELEGRAM_PARIKSHIT=1634483941,TELEGRAM_DHWANI=900028291,TELEGRAM_PRANJUL=1756936987,MICROSERVICE_BACKEND=BACKEND,MICROSERVICE_NOTIFICATION=NOTIFICATION,MICROSERVICE_CUSTOMER_SERVICE=CUSTOMER_SERVICE}"
-    #   env:
-    #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - run: aws lambda update-function-configuration --function-name serverless-lambda-staging-hello --environment "Variables="
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        LAMBDA_VAR: ${{ secrets.LAMBDA_VAR }}
