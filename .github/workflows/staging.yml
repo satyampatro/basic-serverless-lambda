@@ -32,4 +32,4 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         LAMBDA_VAR: ${{ secrets.LAMBDA_VAR }}
-      run: aws lambda update-function-configuration --function-name serverless-lambda-staging-hello --environment "Variables=${{LAMBDA_VAR}}"
+      run: aws lambda update-function-configuration --function-name serverless-lambda-staging-hello --environment "Variables=$LAMBDA_VAR"
