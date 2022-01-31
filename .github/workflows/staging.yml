@@ -28,7 +28,6 @@ jobs:
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@master
       with:
-        role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
         aws-region: ap-south-1
     - name: Deploy lambda function
       env:
